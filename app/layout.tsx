@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-    title: "Next AI Draw.io - AI-Powered Diagram Generator",
+    title: "Draw_Your_Chart - AI-Powered Diagram Generator",
     description:
         "Create AWS architecture diagrams, flowcharts, and technical diagrams using AI. Free online tool integrating draw.io with AI assistance for professional diagram creation.",
     keywords: [
@@ -39,33 +39,33 @@ export const metadata: Metadata = {
         "free diagram generator",
         "online diagram maker",
     ],
-    authors: [{ name: "Next AI Draw.io" }],
-    creator: "Next AI Draw.io",
-    publisher: "Next AI Draw.io",
-    metadataBase: new URL("https://next-ai-drawio.jiang.jp"),
+    authors: [{ name: "Draw_Your_Chart" }],
+    creator: "Draw_Your_Chart",
+    publisher: "Draw_Your_Chart",
+    metadataBase: new URL("https://draw-your-chart.pages.dev"),
     openGraph: {
-        title: "Next AI Draw.io - AI Diagram Generator",
+        title: "Draw_Your_Chart - AI Diagram Generator",
         description:
             "Create professional diagrams with AI assistance. Supports AWS architecture, flowcharts, and more.",
         type: "website",
-        url: "https://next-ai-drawio.jiang.jp",
-        siteName: "Next AI Draw.io",
+        url: "https://draw-your-chart.pages.dev",
+        siteName: "Draw_Your_Chart",
         locale: "en_US",
         images: [
             {
-                url: "/architecture.png",
+                url: "https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png",
                 width: 1200,
                 height: 630,
-                alt: "Next AI Draw.io - AI-powered diagram creation tool",
+                alt: "Draw_Your_Chart - AI-powered diagram creation tool",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Next AI Draw.io - AI Diagram Generator",
+        title: "Draw_Your_Chart - AI Diagram Generator",
         description:
             "Create professional diagrams with AI assistance. Free, no login required.",
-        images: ["/architecture.png"],
+        images: ["https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png"],
     },
     robots: {
         index: true,
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
         },
     },
     icons: {
-        icon: "/favicon.ico",
+        icon: "https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png",
     },
 }
 
@@ -91,12 +91,12 @@ export default function RootLayout({
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: "Next AI Draw.io",
+        name: "Draw_Your_Chart",
         applicationCategory: "DesignApplication",
         operatingSystem: "Web Browser",
         description:
             "AI-powered diagram generator with targeted XML editing capabilities that integrates with draw.io for creating AWS architecture diagrams, flowcharts, and technical diagrams. Features diagram history, multi-provider AI support, and real-time collaboration.",
-        url: "https://next-ai-drawio.jiang.jp",
+        url: "https://draw-your-chart.pages.dev",
         offers: {
             "@type": "Offer",
             price: "0",
