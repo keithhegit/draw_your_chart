@@ -1,285 +1,79 @@
-# Next AI Draw.io
-
-<div align="center">
-
-**AI-Powered Diagram Creation Tool - Chat, Draw, Visualize**
-
-English | [中文](./docs/README_CN.md) | [日本語](./docs/README_JA.md)
-
-[![TrendShift](https://trendshift.io/api/badge/repositories/15449)](https://next-ai-drawio.jiang.jp/)
-
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Next.js](https://img.shields.io/badge/Next.js-16.x-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.x-61dafb)](https://react.dev/)
-[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa)](https://github.com/sponsors/DayuanJiang)
-
-[![Live Demo](./public/live-demo-button.svg)](https://next-ai-drawio.jiang.jp/)
-
-</div>
-
-A Next.js web application that integrates AI capabilities with draw.io diagrams. Create, modify, and enhance diagrams through natural language commands and AI-assisted visualization.
-
-
-
-https://github.com/user-attachments/assets/9d60a3e8-4a1c-4b5e-acbb-26af2d3eabd1
-
-
-
-## Table of Contents
-- [Next AI Draw.io ](#next-ai-drawio-)
-  - [Table of Contents](#table-of-contents)
-  - [Examples](#examples)
-  - [Features](#features)
-  - [MCP Server (Preview)](#mcp-server-preview)
-  - [Getting Started](#getting-started)
-    - [Try it Online](#try-it-online)
-    - [Run with Docker (Recommended)](#run-with-docker-recommended)
-    - [Installation](#installation)
-  - [Deployment](#deployment)
-  - [Multi-Provider Support](#multi-provider-support)
-  - [How It Works](#how-it-works)
-  - [Project Structure](#project-structure)
-  - [Support \& Contact](#support--contact)
-  - [Star History](#star-history)
+# Draw_Your_Chart 天耘产品团队自用AI产品原型/流程设计图工具
 
-## Examples
+📚 示例库：拿来即用的“咒语” (Prompts)
+AI 画图的关键在于怎么问。这里整理了高质量的提示词模板，直接复制并修改括号里的内容即可。
 
-Here are some example prompts and their generated diagrams:
+🏷️ 场景 A：产品经理 (PM) —— 业务流程图
+用途：将 PRD 文档中的文字描述快速转化为流程图。
 
-<div align="center">
-<table width="100%">
-  <tr>
-    <td colspan="2" valign="top" align="center">
-      <strong>Animated transformer connectors</strong><br />
-      <p><strong>Prompt:</strong> Give me a **animated connector** diagram of transformer's architecture.</p>
-      <img src="./public/animated_connectors.svg" alt="Transformer Architecture with Animated Connectors" width="480" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>GCP architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a GCP architecture diagram with **GCP icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/gcp_demo.svg" alt="GCP Architecture Diagram" width="480" />
-    </td>
-    <td width="50%" valign="top">
-      <strong>AWS architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a AWS architecture diagram with **AWS icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/aws_demo.svg" alt="AWS Architecture Diagram" width="480" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>Azure architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a Azure architecture diagram with **Azure icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/azure_demo.svg" alt="Azure Architecture Diagram" width="480" />
-    </td>
-    <td width="50%" valign="top">
-      <strong>Cat sketch prompt</strong><br />
-      <p><strong>Prompt:</strong> Draw a cute cat for me.</p>
-      <img src="./public/cat_demo.svg" alt="Cat Drawing" width="240" />
-    </td>
-  </tr>
-</table>
-</div>
+咒语模板： “请生成一个业务流程图。 描述的是：[外卖订单处理]流程。 涉及角色：[用户、商家、外卖平台、骑手]。 核心路径：[用户下单 -> 商家接单 -> 骑手取餐 -> 送达用户]。 异常分支：[如果商家拒绝接单，则自动退款；如果骑手超时，触发超时赔付]。 请使用泳道图（Swimlane）格式，并用不同颜色区分角色。”
 
-## Features
+🏗️ 场景 B：技术人员 —— 云架构图
+用途：快速绘制带有官方图标的 AWS/阿里云架构图。
 
--   **LLM-Powered Diagram Creation**: Leverage Large Language Models to create and manipulate draw.io diagrams directly through natural language commands
--   **Image-Based Diagram Replication**: Upload existing diagrams or images and have the AI replicate and enhance them automatically
--   **PDF & Text File Upload**: Upload PDF documents and text files to extract content and generate diagrams from existing documents
--   **AI Reasoning Display**: View the AI's thinking process for supported models (OpenAI o1/o3, Gemini, Claude, etc.)
--   **Diagram History**: Comprehensive version control that tracks all changes, allowing you to view and restore previous versions of your diagrams before the AI editing.
--   **Interactive Chat Interface**: Communicate with AI to refine your diagrams in real-time
--   **Cloud Architecture Diagram Support**: Specialized support for generating cloud architecture diagrams (AWS, GCP, Azure)
--   **Animated Connectors**: Create dynamic and animated connectors between diagram elements for better visualization
+咒语模板： “生成一个 AWS 高可用 Web 应用架构图。 包含以下组件：
 
-## MCP Server (Preview)
+Internet Gateway 连接到 Application Load Balancer (ALB)。
 
-> **Preview Feature**: This feature is experimental and may not stable.
+ALB 分发流量到两个可用区（Availability Zones）。
 
-Use Next AI Draw.io with AI agents like Claude Desktop, Cursor, and VS Code via MCP (Model Context Protocol).
+每个可用区有一个 EC2 实例集群（Auto Scaling Group）。
 
-```json
-{
-  "mcpServers": {
-    "drawio": {
-      "command": "npx",
-      "args": ["@next-ai-drawio/mcp-server@latest"]
-    }
-  }
-}
-```
+数据库使用 RDS 主从架构。 请使用 AWS 官方图标，并连线展示流量流向。”
 
-### Claude Code CLI
+⏱️ 场景 C：系统分析 —— 时序图
+用途：理清多个系统之间的交互逻辑。
 
-```bash
-claude mcp add drawio -- npx @next-ai-drawio/mcp-server@latest
-```
+咒语模板： “画一个 OAuth 2.0 登录的时序图 (Sequence Diagram)。 参与者：[用户、客户端 App、授权服务器、资源服务器]。 步骤：
 
-Then ask Claude to create diagrams:
-> "Create a flowchart showing user authentication with login, MFA, and session management"
+用户点击登录。
 
-The diagram appears in your browser in real-time!
+客户端重定向到授权服务器。
 
-See the [MCP Server README](./packages/mcp-server/README.md) for VS Code, Cursor, and other client configurations.
+用户输入密码授权。
 
-## Getting Started
+授权服务器返回 Authorization Code。
 
-### Try it Online
+客户端用 Code 换取 Access Token。
 
-No installation needed! Try the app directly on our demo site:
+客户端用 Token 请求资源服务器数据。”
 
-[![Live Demo](./public/live-demo-button.svg)](https://next-ai-drawio.jiang.jp/)
+🧠 场景 D：思维导图
+用途：头脑风暴或知识梳理。
 
-> Note: Due to high traffic, the demo site currently uses minimax-m2. For best results, we recommend self-hosting with Claude Sonnet 4.5 or Claude Opus 4.5.
+咒语模板： “画一个关于 [如何推广一款新 App] 的思维导图。 中心主题是 App 推广。 主要分支包括：[ASO 优化、社交媒体营销、KOL 投放、线下活动]。 请帮我把每个分支再展开 2-3 个具体的执行策略。”
 
-> **Bring Your Own API Key**: You can use your own API key to bypass usage limits on the demo site. Click the Settings icon in the chat panel to configure your provider and API key. Your key is stored locally in your browser and is never stored on the server.
+4. 💼 实战应用：如何嵌入产品开发工作流？
+✅ 阶段 1：需求分析 (会议记录 -> 可视化)
+痛点：开会讨论业务逻辑时，白板上画得乱七八糟，会后没人整理。 实战：
 
-### Run with Docker (Recommended)
+会议中，将大家讨论出的核心逻辑记录成文字（例如：“先校验库存，有货就锁单，没货就报错”）。
 
-If you just want to run it locally, the best way is to use Docker.
+直接发给 Next AI Draw.io：“根据这段话生成流程图”。
 
-First, install Docker if you haven't already: [Get Docker](https://docs.docker.com/get-docker/)
+收益：会议结束时，一张清晰的流程图已经做好了，可以直接发在群里确认。
 
-Then run:
+✅ 阶段 2：技术方案设计 (Code -> Diagram)
+痛点：接手旧项目，看不懂复杂的代码逻辑。 实战：
 
-```bash
-docker run -d -p 3000:3000 \
-  -e AI_PROVIDER=openai \
-  -e AI_MODEL=gpt-4o \
-  -e OPENAI_API_KEY=your_api_key \
-  ghcr.io/dayuanjiang/next-ai-draw-io:latest
-```
+使用工具栏的“上传文件”功能（或直接粘贴代码）。
 
-Or use an env file:
+发送指令：“阅读这段 Python 代码，分析订单状态流转逻辑，画出状态机图（State Diagram）。”
 
-```bash
-cp env.example .env
-# Edit .env with your configuration
-docker run -d -p 3000:3000 --env-file .env ghcr.io/dayuanjiang/next-ai-draw-io:latest
-```
+收益：快速理解老旧系统的核心逻辑。
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+✅ 阶段 3：文档编写 (迭代维护)
+痛点：需求变更了（比如加了一个“人工审核”环节），原来的图要重画，很麻烦。 实战：
 
-Replace the environment variables with your preferred AI provider configuration. See [Multi-Provider Support](#multi-provider-support) for available options.
+打开之前生成的图。
 
-> **Offline Deployment:** If `embed.diagrams.net` is blocked, see [Offline Deployment](./docs/offline-deployment.md) for configuration options.
+对话框输入：“在‘提交申请’和‘系统通过’之间，插入一个‘人工审核’的菱形判断框。如果审核不通过，返回‘修改申请’。”
 
-### Installation
+收益：AI 自动处理繁琐的连线重排，几秒钟完成迭代。
 
-1. Clone the repository:
+💡 小白避坑指南
+不要追求一步到位：复杂的图建议分步生成。先让 AI 画出主干，然后再通过对话补充细节（例如：“给所有的支付节点加上红色背景”）。
 
-```bash
-git clone https://github.com/DayuanJiang/next-ai-draw-io
-cd next-ai-draw-io
-```
+善用“Auto Layout”：有时候 AI 生成的线条会缠绕在一起。点击 Draw.io 菜单栏的 Arrange (排列) -> Layout (布局)，可以一键自动整理排版，瞬间变整齐。
 
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Configure your AI provider:
-
-Create a `.env.local` file in the root directory:
-
-```bash
-cp env.example .env.local
-```
-
-Edit `.env.local` and configure your chosen provider:
-
--   Set `AI_PROVIDER` to your chosen provider (bedrock, openai, anthropic, google, azure, ollama, openrouter, deepseek, siliconflow)
--   Set `AI_MODEL` to the specific model you want to use
--   Add the required API keys for your provider
--   `TEMPERATURE`: Optional temperature setting (e.g., `0` for deterministic output). Leave unset for models that don't support it (e.g., reasoning models).
--   `ACCESS_CODE_LIST`: Optional access password(s), can be comma-separated for multiple passwords.
-
-> Warning: If you do not set `ACCESS_CODE_LIST`, anyone can access your deployed site directly, which may lead to rapid depletion of your token. It is recommended to set this option.
-
-See the [Provider Configuration Guide](./docs/ai-providers.md) for detailed setup instructions for each provider.
-
-4. Run the development server:
-
-```bash
-npm run dev
-```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
-## Deployment
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-Or you can deploy by this button.
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDayuanJiang%2Fnext-ai-draw-io)
-
-Be sure to **set the environment variables** in the Vercel dashboard as you did in your local `.env.local` file.
-
-
-## Multi-Provider Support
-
--   AWS Bedrock (default)
--   OpenAI
--   Anthropic
--   Google AI
--   Azure OpenAI
--   Ollama
--   OpenRouter
--   DeepSeek
--   SiliconFlow
-
-All providers except AWS Bedrock and OpenRouter support custom endpoints.
-
-📖 **[Detailed Provider Configuration Guide](./docs/ai-providers.md)** - See setup instructions for each provider.
-
-**Model Requirements**: This task requires strong model capabilities for generating long-form text with strict formatting constraints (draw.io XML). Recommended models include Claude Sonnet 4.5, GPT-5.1, Gemini 3 Pro, and DeepSeek V3.2/R1.
-
-Note that `claude` series has trained on draw.io diagrams with cloud architecture logos like AWS, Azure, GCP. So if you want to create cloud architecture diagrams, this is the best choice.
-
-
-## How It Works
-
-The application uses the following technologies:
-
--   **Next.js**: For the frontend framework and routing
--   **Vercel AI SDK** (`ai` + `@ai-sdk/*`): For streaming AI responses and multi-provider support
--   **react-drawio**: For diagram representation and manipulation
-
-Diagrams are represented as XML that can be rendered in draw.io. The AI processes your commands and generates or modifies this XML accordingly.
-
-## Project Structure
-
-```
-app/                  # Next.js App Router
-  api/chat/           # Chat API endpoint with AI tools
-  page.tsx            # Main page with DrawIO embed
-components/           # React components
-  chat-panel.tsx      # Chat interface with diagram control
-  chat-input.tsx      # User input component with file upload
-  history-dialog.tsx  # Diagram version history viewer
-  ui/                 # UI components (buttons, cards, etc.)
-contexts/             # React context providers
-  diagram-context.tsx # Global diagram state management
-lib/                  # Utility functions and helpers
-  ai-providers.ts     # Multi-provider AI configuration
-  utils.ts            # XML processing and conversion utilities
-public/               # Static assets including example images
-```
-
-## Support & Contact
-
-If you find this project useful, please consider [sponsoring](https://github.com/sponsors/DayuanJiang) to help me host the live demo site!
-
-For support or inquiries, please open an issue on the GitHub repository or contact the maintainer at:
-
--   Email: me[at]jiang.jp
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=DayuanJiang/next-ai-draw-io&type=date&legend=top-left)](https://www.star-history.com/#DayuanJiang/next-ai-draw-io&type=date&legend=top-left)
-
----
+保存源文件：虽然可以在线看，但建议画完后点击 File -> Save as -> XML，把源文件存在本地，方便下次直接拖进去继续改。
