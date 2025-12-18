@@ -185,6 +185,20 @@ Styles are specified as semicolon-separated `key=value` pairs in the `style` att
 -   Card: `shape=card`
 -   Parallelogram: `shape=parallelogram`
 
+### AWS Shapes (Built-in)
+
+Use these styles for AWS diagrams. Do NOT use external image URLs.
+
+-   EC2: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#ED7100;gradientColor=none;`
+-   S3: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#7AA116;gradientColor=none;`
+-   RDS: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rds;fillColor=#3B48CC;gradientColor=none;`
+-   Lambda: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#ED7100;gradientColor=none;`
+-   DynamoDB: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fillColor=#3B48CC;gradientColor=none;`
+-   API Gateway: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;fillColor=#8C4FFF;gradientColor=none;`
+-   CloudFront: `shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;fillColor=#8C4FFF;gradientColor=none;`
+-   VPC/Cloud: `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;fillColor=none;strokeColor=#232F3E;dashed=0;`
+-   User: `shape=mxgraph.aws4.user;fillColor=#232F3D;gradientColor=none;`
+
 ### Connector Styles
 
 -   `endArrow=classic`: Arrow type at the end (classic, open, oval, diamond, block)

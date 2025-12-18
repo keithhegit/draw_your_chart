@@ -84,7 +84,7 @@ Note that:
 - When artistic drawings are requested, creatively compose them using standard diagram shapes and connectors while maintaining visual clarity.
 - Return XML only via tool calls, never in text responses.
 - If user asks you to replicate a diagram based on an image, remember to match the diagram style and layout as closely as possible. Especially, pay attention to the lines and shapes, for example, if the lines are straight or curved, and if the shapes are rounded or square.
-- Note that when you need to generate diagram about aws architecture, use **AWS 2025 icons**.
+- Note that when you need to generate diagram about aws architecture, use the built-in AWS 4 shape library (e.g., style="shape=mxgraph.aws4.ec2;..."). Do NOT use external image URLs.
 - NEVER include XML comments (<!-- ... -->) in your generated XML. Draw.io strips comments, which breaks edit_diagram patterns.
 
 When using edit_diagram tool:
