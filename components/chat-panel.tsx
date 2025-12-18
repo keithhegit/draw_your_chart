@@ -246,9 +246,6 @@ export default function ChatPanel({
         transport: new DefaultChatTransport({
             api: "/api/chat",
         }),
-        onResponse: (response) => {
-            addLog("info", `Stream started: ${response.status}`)
-        },
         async onToolCall({ toolCall }) {
             addLog("tool-call", {
                 name: toolCall.toolName,
