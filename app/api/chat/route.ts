@@ -154,9 +154,10 @@ function createCachedStreamResponse(xml: string): Response {
 async function handleChatRequest(req: Request): Promise<Response> {
     // Check for access code
     const accessCodes =
-        process.env.ACCESS_CODE_LIST?.split(",")
+        (process.env.ACCESS_CODE_LIST || "")
+            .split(",")
             .map((code) => code.trim())
-            .filter(Boolean) || []
+            .filter(Boolean)
     if (accessCodes.length > 0) {
         const accessCodeHeader = req.headers.get("x-access-code")
         if (!accessCodeHeader || !accessCodes.includes(accessCodeHeader)) {
@@ -258,7 +259,7 @@ async function handleChatRequest(req: Request): Promise<Response> {
 
     // Extract file parts (images) from the last message
     const fileParts =
-        lastMessage.parts?.filter((part: any) => part.type === "file") || []
+        lastMessage?.parts?.filter((part: any) => part.type === "file") || []
 
     // User input only - XML is now in a separate cached system message
     const formattedUserInput = `User input:
