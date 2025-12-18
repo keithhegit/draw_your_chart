@@ -1239,7 +1239,8 @@ Continue from EXACTLY where you stopped.`,
         if (!checkAllQuotaLimits()) return
 
         // Extract text and images from parts
-        const content = textPart.text
+        // Cast textPart to any to access text property, or check type explicitly
+        const content = (textPart as any).text || ""
         const imageParts = userParts?.filter(
             (p: any) => p.type === "image" || p.type === "file",
         ) || []
