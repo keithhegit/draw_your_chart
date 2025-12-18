@@ -1238,8 +1238,14 @@ Continue from EXACTLY where you stopped.`,
         // Check all quota limits
         if (!checkAllQuotaLimits()) return
 
+        // Extract text and images from parts
+        const content = textPart.text
+        const imageParts = userParts?.filter(
+            (p: any) => p.type === "image" || p.type === "file",
+        ) || []
+
         // Now send the message after state is guaranteed to be updated
-        sendChatMessage(userParts, savedXml, previousXml, sessionId)
+        sendChatMessage(content, imageParts, savedXml, previousXml, sessionId)
 
         // Token count is tracked in onFinish with actual server usage
     }
@@ -1286,8 +1292,11 @@ Continue from EXACTLY where you stopped.`,
         // Check all quota limits
         if (!checkAllQuotaLimits()) return
 
+        // Extract images from newParts (text is newText)
+        const imageParts = newParts.filter((p: any) => p.type !== "text")
+
         // Now send the edited message after state is guaranteed to be updated
-        sendChatMessage(newParts, savedXml, previousXml, sessionId)
+        sendChatMessage(newText, imageParts, savedXml, previousXml, sessionId)
         // Token count is tracked in onFinish with actual server usage
     }
 
