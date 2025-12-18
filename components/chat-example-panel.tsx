@@ -1,11 +1,7 @@
 "use client"
 
 import {
-    Cloud,
-    FileText,
-    GitBranch,
     Palette,
-    Terminal,
     Zap,
 } from "lucide-react"
 
@@ -65,54 +61,9 @@ function ExampleCard({
 
 export default function ExamplePanel({
     setInput,
-    setFiles,
 }: {
     setInput: (input: string) => void
-    setFiles: (files: File[]) => void
 }) {
-    const handleReplicateFlowchart = async () => {
-        setInput("Replicate this flowchart.")
-
-        try {
-            const response = await fetch("/example.png")
-            const blob = await response.blob()
-            const file = new File([blob], "example.png", { type: "image/png" })
-            setFiles([file])
-        } catch (error) {
-            console.error("Error loading example image:", error)
-        }
-    }
-
-    const handleReplicateArchitecture = async () => {
-        setInput("Replicate this in aws style")
-
-        try {
-            const response = await fetch("/architecture.png")
-            const blob = await response.blob()
-            const file = new File([blob], "architecture.png", {
-                type: "image/png",
-            })
-            setFiles([file])
-        } catch (error) {
-            console.error("Error loading architecture image:", error)
-        }
-    }
-
-    const handlePdfExample = async () => {
-        setInput("Summarize this paper as a diagram")
-
-        try {
-            const response = await fetch("/chain-of-thought.txt")
-            const blob = await response.blob()
-            const file = new File([blob], "chain-of-thought.txt", {
-                type: "text/plain",
-            })
-            setFiles([file])
-        } catch (error) {
-            console.error("Error loading text file:", error)
-        }
-    }
-
     return (
         <div className="py-6 px-2 animate-fade-in">
             {/* Welcome section */}
@@ -121,7 +72,7 @@ export default function ExamplePanel({
                     使用 AI 创建图表
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                    描述您想要创建的内容，或上传图片进行复刻
+                    描述您想要创建的内容
                 </p>
             </div>
 
@@ -133,14 +84,6 @@ export default function ExamplePanel({
 
                 <div className="grid gap-2">
                     <ExampleCard
-                        icon={<FileText className="w-4 h-4 text-primary" />}
-                        title="文档转图表"
-                        description="支持上传 .pdf, .txt, .md, .json, .csv 等多种格式"
-                        onClick={handlePdfExample}
-                        isNew
-                    />
-
-                    <ExampleCard
                         icon={<Zap className="w-4 h-4 text-primary" />}
                         title="动态图表"
                         description="绘制带有动态连接线的 Transformer 架构图"
@@ -148,22 +91,7 @@ export default function ExamplePanel({
                             setInput(
                                 "Give me a **animated connector** diagram of transformer's architecture",
                             )
-                            setFiles([])
                         }}
-                    />
-
-                    <ExampleCard
-                        icon={<Cloud className="w-4 h-4 text-primary" />}
-                        title="AWS 架构图"
-                        description="使用 AWS 图标创建云架构图"
-                        onClick={handleReplicateArchitecture}
-                    />
-
-                    <ExampleCard
-                        icon={<GitBranch className="w-4 h-4 text-primary" />}
-                        title="复刻流程图"
-                        description="上传并复刻现有的流程图"
-                        onClick={handleReplicateFlowchart}
                     />
 
                     <ExampleCard
@@ -172,7 +100,6 @@ export default function ExamplePanel({
                         description="绘制一些有趣和有创意的内容"
                         onClick={() => {
                             setInput("Draw a cat for me")
-                            setFiles([])
                         }}
                     />
                 </div>

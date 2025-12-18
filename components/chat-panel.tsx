@@ -30,8 +30,6 @@ import {
 import { useDiagram } from "@/contexts/diagram-context"
 import { getAIConfig } from "@/lib/ai-config"
 import { findCachedResponse } from "@/lib/cached-responses"
-import { isPdfFile, isTextFile } from "@/lib/pdf-utils"
-import { type FileData, useFileProcessor } from "@/lib/use-file-processor"
 import { useQuotaManager } from "@/lib/use-quota-manager"
 import { formatXML, isMxCellXmlComplete, wrapWithMxFile } from "@/lib/utils"
 import { ChatMessageDisplay } from "./chat-message-display"
@@ -141,9 +139,6 @@ export default function ChatPanel({
             ),
         ])
     }
-
-    // File processing using extracted hook
-    const { files, pdfData, handleFileChange, setFiles } = useFileProcessor()
 
     const [showHistory, setShowHistory] = useState(false)
     const [showSettingsDialog, setShowSettingsDialog] = useState(false)
@@ -939,25 +934,18 @@ Continue from EXACTLY where you stopped.`,
             if (messages.length === 0) {
                 const cached = findCachedResponse(
                     input.trim(),
-                    files.length > 0,
+                    false,
                 )
                 if (cached) {
                     // Add user message and fake assistant response to messages
                     // The chat-message-display useEffect will handle displaying the diagram
                     const toolCallId = `cached-${Date.now()}`
 
-                    // Build user message text including any file content
-                    const userText = await processFilesAndAppendContent(
-                        input,
-                        files,
-                        pdfData,
-                    )
-
                     setMessages([
                         {
                             id: `user-${Date.now()}`,
                             role: "user" as const,
-                            parts: [{ type: "text" as const, text: userText }],
+                            parts: [{ type: "text" as const, text: input }],
                         },
                         {
                             id: `assistant-${Date.now()}`,
@@ -974,7 +962,6 @@ Continue from EXACTLY where you stopped.`,
                         },
                     ] as any)
                     setInput("")
-                    setFiles([])
                     return
                 }
             }
@@ -986,16 +973,6 @@ Continue from EXACTLY where you stopped.`,
                 // Update ref directly to avoid race condition with React's async state update
                 // This ensures edit_diagram has the correct XML before AI responds
                 chartXMLRef.current = chartXml
-
-                // Build user text by concatenating input with pre-extracted text
-                // (Backend only reads first text part, so we must combine them)
-                const imageParts: any[] = []
-                const userText = await processFilesAndAppendContent(
-                    input,
-                    files,
-                    pdfData,
-                    imageParts,
-                )
 
                 // Get previous XML from the last snapshot (before this message)
                 const snapshotKeys = Array.from(
@@ -1014,11 +991,10 @@ Continue from EXACTLY where you stopped.`,
                 // Check all quota limits
                 if (!checkAllQuotaLimits()) return
 
-                sendChatMessage(userText, imageParts, chartXml, previousXml, sessionId)
+                sendChatMessage(input, chartXml, previousXml, sessionId)
 
                 // Token count is tracked in onFinish with actual server usage
                 setInput("")
-                setFiles([])
             } catch (error) {
                 console.error("Error fetching chart data:", error)
             }
@@ -1028,7 +1004,6 @@ Continue from EXACTLY where you stopped.`,
     const handleNewChat = useCallback(() => {
         setMessages([])
         clearDiagram()
-        handleFileChange([]) // Use handleFileChange to also clear pdfData
         const newSessionId = `session-${Date.now()}-${Math.random()
             .toString(36)
             .slice(2, 9)}`
@@ -1049,7 +1024,7 @@ Continue from EXACTLY where you stopped.`,
         }
 
         setShowNewChatDialog(false)
-    }, [clearDiagram, handleFileChange, setMessages, setSessionId])
+    }, [clearDiagram, setMessages, setSessionId])
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -1110,7 +1085,6 @@ Continue from EXACTLY where you stopped.`,
     // Send chat message with headers and increment quota
     const sendChatMessage = (
         content: string,
-        parts: any[],
         xml: string,
         previousXml: string,
         sessionId: string,
@@ -1121,17 +1095,10 @@ Continue from EXACTLY where you stopped.`,
 
         const config = getAIConfig()
 
-        // Construct content as array if there are parts (images), otherwise string
-        // This ensures compatibility with Vercel AI SDK v3+ multimodal format
-        const messageContent =
-            parts.length > 0
-                ? [{ type: "text", text: content }, ...parts]
-                : content
-
         sendMessage(
             {
                 role: "user",
-                content: messageContent as any,
+                content: content,
             } as any,
             {
                 body: { xml, previousXml, sessionId },
@@ -1156,44 +1123,7 @@ Continue from EXACTLY where you stopped.`,
         quotaManager.incrementRequestCount()
     }
 
-    // Process files and append content to user text (handles PDF, text, and optionally images)
-    const processFilesAndAppendContent = async (
-        baseText: string,
-        files: File[],
-        pdfData: Map<File, FileData>,
-        imageParts?: any[],
-    ): Promise<string> => {
-        let userText = baseText
 
-        for (const file of files) {
-            if (isPdfFile(file)) {
-                const extracted = pdfData.get(file)
-                if (extracted?.text) {
-                    userText += `\n\n[PDF: ${file.name}]\n${extracted.text}`
-                }
-            } else if (isTextFile(file)) {
-                const extracted = pdfData.get(file)
-                if (extracted?.text) {
-                    userText += `\n\n[File: ${file.name}]\n${extracted.text}`
-                }
-            } else if (imageParts) {
-                // Handle as image (only if imageParts array provided)
-                const reader = new FileReader()
-                const dataUrl = await new Promise<string>((resolve) => {
-                    reader.onload = () => resolve(reader.result as string)
-                    reader.readAsDataURL(file)
-                })
-
-                imageParts.push({
-                    type: "image",
-                    image: dataUrl,
-                    mimeType: file.type,
-                })
-            }
-        }
-
-        return userText
-    }
 
     const handleRegenerate = async (messageIndex: number) => {
         const isProcessing = status === "streaming" || status === "submitted"
@@ -1247,12 +1177,9 @@ Continue from EXACTLY where you stopped.`,
         // Extract text and images from parts
         // Cast textPart to any to access text property, or check type explicitly
         const content = (textPart as any).text || ""
-        const imageParts = userParts?.filter(
-            (p: any) => p.type === "image" || p.type === "file",
-        ) || []
 
         // Now send the message after state is guaranteed to be updated
-        sendChatMessage(content, imageParts, savedXml, previousXml, sessionId)
+        sendChatMessage(content, savedXml, previousXml, sessionId)
 
         // Token count is tracked in onFinish with actual server usage
     }
@@ -1299,11 +1226,8 @@ Continue from EXACTLY where you stopped.`,
         // Check all quota limits
         if (!checkAllQuotaLimits()) return
 
-        // Extract images from newParts (text is newText)
-        const imageParts = newParts.filter((p: any) => p.type !== "text")
-
         // Now send the edited message after state is guaranteed to be updated
-        sendChatMessage(newText, imageParts, savedXml, previousXml, sessionId)
+        sendChatMessage(newText, savedXml, previousXml, sessionId)
         // Token count is tracked in onFinish with actual server usage
     }
 
@@ -1412,7 +1336,6 @@ Continue from EXACTLY where you stopped.`,
                 <ChatMessageDisplay
                     messages={messages}
                     setInput={setInput}
-                    setFiles={handleFileChange}
                     processedToolCallsRef={processedToolCallsRef}
                     editDiagramOriginalXmlRef={editDiagramOriginalXmlRef}
                     sessionId={sessionId}
@@ -1432,9 +1355,6 @@ Continue from EXACTLY where you stopped.`,
                     onSubmit={onFormSubmit}
                     onChange={handleInputChange}
                     onClearChat={handleNewChat}
-                    files={files}
-                    onFileChange={handleFileChange}
-                    pdfData={pdfData}
                     showHistory={showHistory}
                     onToggleHistory={setShowHistory}
                     sessionId={sessionId}

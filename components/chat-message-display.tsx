@@ -193,7 +193,6 @@ const getUserOriginalText = (message: UIMessage): string => {
 interface ChatMessageDisplayProps {
     messages: UIMessage[]
     setInput: (input: string) => void
-    setFiles: (files: File[]) => void
     processedToolCallsRef: MutableRefObject<Set<string>>
     editDiagramOriginalXmlRef: MutableRefObject<Map<string, string>>
     sessionId?: string
@@ -205,7 +204,6 @@ interface ChatMessageDisplayProps {
 export function ChatMessageDisplay({
     messages,
     setInput,
-    setFiles,
     processedToolCallsRef,
     editDiagramOriginalXmlRef,
     sessionId,
@@ -745,7 +743,7 @@ export function ChatMessageDisplay({
     return (
         <ScrollArea className="h-full w-full scrollbar-thin">
             {messages.length === 0 ? (
-                <ExamplePanel setInput={setInput} setFiles={setFiles} />
+                <ExamplePanel setInput={setInput} />
             ) : (
                 <div className="py-4 px-4 space-y-4">
                     {messages.map((message, messageIndex) => {
