@@ -34,8 +34,14 @@ function validateFileParts(messages: any[]): {
     error?: string
 } {
     const lastMessage = messages[messages.length - 1]
-    const fileParts =
-        lastMessage?.parts?.filter((p: any) => p.type === "file") || []
+    let fileParts: any[] = []
+
+    if (Array.isArray(lastMessage?.content)) {
+        fileParts = lastMessage.content.filter((p: any) => p.type === "image")
+    } else {
+        fileParts =
+            lastMessage?.parts?.filter((p: any) => p.type === "file") || []
+    }
 
     if (fileParts.length > MAX_FILES) {
         return {
@@ -47,8 +53,9 @@ function validateFileParts(messages: any[]): {
     for (const filePart of fileParts) {
         // Data URLs format: data:image/png;base64,<data>
         // Base64 increases size by ~33%, so we check the decoded size
-        if (filePart.url?.startsWith("data:")) {
-            const base64Data = filePart.url.split(",")[1]
+        const url = filePart.image || filePart.url
+        if (url?.startsWith("data:")) {
+            const base64Data = url.split(",")[1]
             if (base64Data) {
                 const sizeInBytes = Math.ceil((base64Data.length * 3) / 4)
                 if (sizeInBytes > MAX_FILE_SIZE) {
@@ -174,8 +181,16 @@ async function handleChatRequest(req: Request): Promise<Response> {
 
     // Extract user input text for Langfuse trace
     const lastMessage = messages[messages.length - 1]
-    const userInputText =
-        lastMessage?.parts?.find((p: any) => p.type === "text")?.text || ""
+    let userInputText = ""
+    if (Array.isArray(lastMessage?.content)) {
+        userInputText =
+            lastMessage.content.find((p: any) => p.type === "text")?.text || ""
+    } else if (typeof lastMessage?.content === "string") {
+        userInputText = lastMessage.content
+    } else {
+        userInputText =
+            lastMessage?.parts?.find((p: any) => p.type === "text")?.text || ""
+    }
 
     // Update Langfuse trace with input, session, and user
     setTraceInput({
@@ -197,8 +212,16 @@ async function handleChatRequest(req: Request): Promise<Response> {
 
     if (isFirstMessage && isEmptyDiagram) {
         const lastMessage = messages[0]
-        const textPart = lastMessage.parts?.find((p: any) => p.type === "text")
-        const filePart = lastMessage.parts?.find((p: any) => p.type === "file")
+        let textPart: any
+        let filePart: any
+
+        if (Array.isArray(lastMessage?.content)) {
+            textPart = lastMessage.content.find((p: any) => p.type === "text")
+            filePart = lastMessage.content.find((p: any) => p.type === "image")
+        } else {
+            textPart = lastMessage.parts?.find((p: any) => p.type === "text")
+            filePart = lastMessage.parts?.find((p: any) => p.type === "file")
+        }
 
         const cached = findCachedResponse(textPart?.text || "", !!filePart)
 
@@ -346,31 +369,6 @@ ${userInputText}
             })
         }
     })
-
-    // Update the last message with user input only (XML moved to separate cached system message)
-    if (enhancedMessages.length >= 1) {
-        const lastModelMessage = enhancedMessages[enhancedMessages.length - 1]
-        if (lastModelMessage.role === "user") {
-            // Build content array with user input text and file parts
-            const contentParts: any[] = [
-                { type: "text", text: formattedUserInput },
-            ]
-
-            // Add image parts back
-            for (const filePart of fileParts) {
-                contentParts.push({
-                    type: "image",
-                    image: filePart.url,
-                    mimeType: filePart.mediaType,
-                })
-            }
-
-            enhancedMessages = [
-                ...enhancedMessages.slice(0, -1),
-                { ...lastModelMessage, content: contentParts },
-            ]
-        }
-    }
 
     // Add cache point to the last assistant message in conversation history
     // This caches the entire conversation prefix for subsequent requests

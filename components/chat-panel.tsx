@@ -267,7 +267,7 @@ export default function ChatPanel({
 
     const {
         messages,
-        sendMessage,
+        append,
         addToolOutput,
         stop,
         status,
@@ -1177,9 +1177,9 @@ Continue from EXACTLY where you stopped.`,
                 })
 
                 imageParts.push({
-                    type: "file",
-                    url: dataUrl,
-                    mediaType: file.type,
+                    type: "image",
+                    image: dataUrl,
+                    mimeType: file.type,
                 })
             }
         }
