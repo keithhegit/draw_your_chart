@@ -165,6 +165,16 @@ function splitTextIntoFileSections(text: string): TextSection[] {
 }
 
 const getMessageTextContent = (message: UIMessage): string => {
+    // Cast to any to handle multimodal content array (Vercel AI SDK v3+)
+    const content = (message as any).content
+    if (typeof content === "string") return content
+    if (Array.isArray(content)) {
+        return content
+            .filter((part: any) => part.type === "text")
+            .map((part: any) => part.text)
+            .join("\n")
+    }
+    // Fallback for legacy parts (if any)
     if (!message.parts) return ""
     return message.parts
         .filter((part) => part.type === "text")

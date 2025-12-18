@@ -1121,11 +1121,17 @@ Continue from EXACTLY where you stopped.`,
 
         const config = getAIConfig()
 
+        // Construct content as array if there are parts (images), otherwise string
+        // This ensures compatibility with Vercel AI SDK v3+ multimodal format
+        const messageContent =
+            parts.length > 0
+                ? [{ type: "text", text: content }, ...parts]
+                : content
+
         sendMessage(
             {
                 role: "user",
-                content,
-                parts: parts.length > 0 ? parts : undefined,
+                content: messageContent as any,
             } as any,
             {
                 body: { xml, previousXml, sessionId },
