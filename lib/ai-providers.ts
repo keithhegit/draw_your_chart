@@ -5,7 +5,7 @@ import { createDeepSeek, deepseek } from "@ai-sdk/deepseek"
 import { gateway } from "@ai-sdk/gateway"
 import { createGoogleGenerativeAI, google } from "@ai-sdk/google"
 import { createOpenAI, openai } from "@ai-sdk/openai"
-import { fromNodeProviderChain } from "@aws-sdk/credential-providers"
+// import { fromNodeProviderChain } from "@aws-sdk/credential-providers"
 import { createOpenRouter } from "@openrouter/ai-sdk-provider"
 import { createOllama, ollama } from "ollama-ai-provider-v2"
 
@@ -541,7 +541,10 @@ export function getAIModel(overrides?: ClientOverrides): ModelConfig {
             // Falls back to env vars (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) for local dev
             const bedrockProvider = createAmazonBedrock({
                 region: process.env.AWS_REGION || "us-west-2",
-                credentialProvider: fromNodeProviderChain(),
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                sessionToken: process.env.AWS_SESSION_TOKEN,
+                // credentialProvider: fromNodeProviderChain(),
             })
             model = bedrockProvider(modelId)
             // Add Anthropic beta options if using Claude models via Bedrock
