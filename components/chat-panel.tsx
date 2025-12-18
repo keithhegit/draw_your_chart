@@ -7,6 +7,7 @@ import {
     MessageSquarePlus,
     PanelRightClose,
     PanelRightOpen,
+    Bug,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -16,6 +17,7 @@ import { flushSync } from "react-dom"
 import { Toaster, toast } from "sonner"
 import { ButtonWithTooltip } from "@/components/button-with-tooltip"
 import { ChatInput } from "@/components/chat-input"
+import { DebugLogDialog, type LogEntry } from "@/components/debug-log-dialog"
 import { ResetWarningModal } from "@/components/reset-warning-modal"
 import { SettingsDialog } from "@/components/settings-dialog"
 import { useDiagram } from "@/contexts/diagram-context"
@@ -145,6 +147,25 @@ export default function ChatPanel({
     const [tpmLimit, setTpmLimit] = useState(0)
     const [showNewChatDialog, setShowNewChatDialog] = useState(false)
     const [minimalStyle, setMinimalStyle] = useState(false)
+    const [showDebugLogs, setShowDebugLogs] = useState(false)
+    const [debugLogs, setDebugLogs] = useState<LogEntry[]>([])
+
+    const addLog = useCallback(
+        (type: LogEntry["type"], content: string | object) => {
+            setDebugLogs((prev) => [
+                ...prev,
+                {
+                    timestamp: new Date()
+                        .toISOString()
+                        .split("T")[1]
+                        .split(".")[0],
+                    type,
+                    content,
+                },
+            ])
+        },
+        [],
+    )
 
     // Check config on mount
     useEffect(() => {
@@ -225,7 +246,15 @@ export default function ChatPanel({
         transport: new DefaultChatTransport({
             api: "/api/chat",
         }),
+        onResponse: (response) => {
+            addLog("info", `Stream started: ${response.status}`)
+        },
         async onToolCall({ toolCall }) {
+            addLog("tool-call", {
+                name: toolCall.toolName,
+                id: toolCall.toolCallId,
+                input: toolCall.input,
+            })
             if (DEBUG) {
                 console.log(
                     `[onToolCall] Tool: ${toolCall.toolName}, CallId: ${toolCall.toolCallId}`,
@@ -532,6 +561,7 @@ Continue from EXACTLY where you stopped.`,
             }
         },
         onError: (error) => {
+            addLog("error", error.message)
             // Silence access code error in console since it's handled by UI
             if (!error.message.includes("Invalid or missing access code")) {
                 console.error("Chat error:", error)
@@ -602,6 +632,7 @@ Continue from EXACTLY where you stopped.`,
             }
         },
         onFinish: ({ message }) => {
+            addLog("info", { event: "finish", usage: message.metadata })
             // Track actual token usage from server metadata
             const metadata = message?.metadata as
                 | Record<string, unknown>
@@ -1303,6 +1334,17 @@ Continue from EXACTLY where you stopped.`,
                                 className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
                             />
                         </ButtonWithTooltip>
+                        <ButtonWithTooltip
+                            tooltipContent="Show Debug Logs"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setShowDebugLogs(true)}
+                            className="hover:bg-accent"
+                        >
+                            <Bug
+                                className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
+                            />
+                        </ButtonWithTooltip>
                         {!isMobile && (
                             <ButtonWithTooltip
                                 tooltipContent="Hide chat panel (Ctrl+B)"
@@ -1363,6 +1405,13 @@ Continue from EXACTLY where you stopped.`,
                 onToggleDrawioUi={onToggleDrawioUi}
                 darkMode={darkMode}
                 onToggleDarkMode={onToggleDarkMode}
+            />
+
+            <DebugLogDialog
+                open={showDebugLogs}
+                onOpenChange={setShowDebugLogs}
+                logs={debugLogs}
+                onClearLogs={() => setDebugLogs([])}
             />
 
             <ResetWarningModal
