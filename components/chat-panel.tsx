@@ -267,7 +267,7 @@ export default function ChatPanel({
 
     const {
         messages,
-        append,
+        sendMessage,
         addToolOutput,
         stop,
         status,
@@ -1124,7 +1124,7 @@ Continue from EXACTLY where you stopped.`,
         const config = getAIConfig()
 
         sendMessage(
-            { parts },
+            { role: "user", content: parts } as any,
             {
                 body: { xml, previousXml, sessionId },
                 headers: {
