@@ -315,67 +315,7 @@ export const CACHED_EXAMPLE_RESPONSES: CachedResponse[] = [
     </mxGeometry>
   </mxCell>`,
     },
-    {
-        promptText: "Replicate this flowchart.",
-        hasImage: true,
-        xml: `<mxCell id="2" value="Lamp doesn't work" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="140" y="40" width="180" height="60" as="geometry"/>
-  </mxCell>
 
-
-  <mxCell id="3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="2" target="4">
-    <mxGeometry relative="1" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="4" value="Lamp&lt;br&gt;plugged in?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffff99;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="130" y="150" width="200" height="200" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="5" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=2;endArrow=block;endFill=1;fontSize=16;" edge="1" parent="1" source="4" target="6">
-    <mxGeometry x="-0.2" relative="1" as="geometry">
-      <mxPoint as="offset"/>
-    </mxGeometry>
-  </mxCell>
-
-
-  <mxCell id="6" value="Plug in lamp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#99ff99;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="420" y="220" width="200" height="60" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="7" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=2;endArrow=block;endFill=1;fontSize=16;" edge="1" parent="1" source="4" target="8">
-    <mxGeometry relative="1" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="8" value="Bulb&lt;br&gt;burned out?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffff99;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="130" y="400" width="200" height="200" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="9" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=2;endArrow=block;endFill=1;fontSize=16;" edge="1" parent="1" source="8" target="10">
-    <mxGeometry x="-0.2" relative="1" as="geometry">
-      <mxPoint as="offset"/>
-    </mxGeometry>
-  </mxCell>
-
-
-  <mxCell id="10" value="Replace bulb" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#99ff99;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="420" y="470" width="200" height="60" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="11" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=2;endArrow=block;endFill=1;fontSize=16;" edge="1" parent="1" source="8" target="12">
-    <mxGeometry relative="1" as="geometry"/>
-  </mxCell>
-
-
-  <mxCell id="12" value="Repair lamp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#99ff99;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=0;" vertex="1" parent="1">
-    <mxGeometry x="130" y="650" width="200" height="60" as="geometry"/>
-  </mxCell>`,
-    },
     {
         promptText: "Summarize this paper as a diagram",
         hasImage: true,
