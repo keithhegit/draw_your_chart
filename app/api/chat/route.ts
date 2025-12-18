@@ -422,9 +422,9 @@ ${userInputText}
 
     const result = streamText({
         model,
-        ...(process.env.MAX_OUTPUT_TOKENS && {
-            maxOutputTokens: parseInt(process.env.MAX_OUTPUT_TOKENS, 10),
-        }),
+        maxOutputTokens: process.env.MAX_OUTPUT_TOKENS
+            ? parseInt(process.env.MAX_OUTPUT_TOKENS, 10)
+            : 16000, // Default to 16k for modern models (DeepSeek supports up to 32k)
         stopWhen: stepCountIs(5),
         // Repair truncated tool calls when maxOutputTokens is reached mid-JSON
         experimental_repairToolCall: async ({ toolCall, error }) => {
