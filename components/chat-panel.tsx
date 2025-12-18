@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import {
-    AlertTriangle,
+    Loader2,
     MessageSquarePlus,
     PanelRightClose,
     PanelRightOpen,
@@ -1290,32 +1290,6 @@ Continue from EXACTLY where you stopped.`,
                                 Draw_Your_Chart
                             </h1>
                         </div>
-                        {!isMobile && (
-                            <Link
-                                href="/about"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors ml-2"
-                            >
-                                About
-                            </Link>
-                        )}
-                        {!isMobile && (
-                            <Link
-                                href="/about"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <ButtonWithTooltip
-                                    tooltipContent="Due to high usage, I have changed the model to minimax-m2 and added some usage limits. See About page for details."
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-6 w-6 text-amber-500 hover:text-amber-600"
-                                >
-                                    <AlertTriangle className="h-4 w-4" />
-                                </ButtonWithTooltip>
-                            </Link>
-                        )}
                     </div>
                     <div className="flex items-center gap-1">
                         <ButtonWithTooltip
