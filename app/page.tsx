@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { DrawIoEmbed } from "react-drawio"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import ChatPanel from "@/components/chat-panel"
+import { LoginDialog } from "@/components/login-dialog"
 import { STORAGE_CLOSE_PROTECTION_KEY } from "@/components/settings-dialog"
 import {
     ResizableHandle,
@@ -24,6 +25,7 @@ export default function Home() {
         showSaveDialog,
         setShowSaveDialog,
     } = useDiagram()
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [isChatVisible, setIsChatVisible] = useState(true)
     const [drawioUi, setDrawioUi] = useState<"min" | "sketch">("min")
@@ -112,6 +114,29 @@ export default function Home() {
         window.addEventListener("resize", checkMobile)
         return () => window.removeEventListener("resize", checkMobile)
     }, [])
+
+    // Check authentication
+    useEffect(() => {
+        const auth = sessionStorage.getItem("is_authenticated")
+        if (auth === "true") {
+            setIsAuthenticated(true)
+        }
+    }, [])
+
+    const handleLogin = () => {
+        setIsAuthenticated(true)
+        sessionStorage.setItem("is_authenticated", "true")
+    }
+
+    if (!isLoaded) return null
+
+    if (!isAuthenticated) {
+        return (
+            <div className="fixed inset-0 bg-background flex items-center justify-center">
+                <LoginDialog onLogin={handleLogin} />
+            </div>
+        )
+    }
 
     const toggleChatPanel = () => {
         const panel = chatPanelRef.current
