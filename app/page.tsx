@@ -128,16 +128,6 @@ export default function Home() {
         sessionStorage.setItem("is_authenticated", "true")
     }
 
-    if (!isLoaded) return null
-
-    if (!isAuthenticated) {
-        return (
-            <div className="fixed inset-0 bg-background flex items-center justify-center">
-                <LoginDialog onLogin={handleLogin} />
-            </div>
-        )
-    }
-
     const toggleChatPanel = () => {
         const panel = chatPanelRef.current
         if (panel) {
@@ -177,6 +167,16 @@ export default function Home() {
         return () =>
             window.removeEventListener("beforeunload", handleBeforeUnload)
     }, [closeProtection])
+
+    if (!isLoaded) return null
+
+    if (!isAuthenticated) {
+        return (
+            <div className="fixed inset-0 bg-background flex items-center justify-center">
+                <LoginDialog onLogin={handleLogin} />
+            </div>
+        )
+    }
 
     return (
         <div className="h-screen bg-background relative overflow-hidden">
