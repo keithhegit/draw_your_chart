@@ -115,63 +115,35 @@ export default function ExamplePanel({
 
     return (
         <div className="py-6 px-2 animate-fade-in">
-            {/* MCP Server Notice */}
-            <a
-                href="https://github.com/DayuanJiang/next-ai-draw-io/tree/main/packages/mcp-server"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block mb-4 p-3 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
-            >
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
-                        <Terminal className="w-4 h-4 text-purple-500" />
-                    </div>
-                    <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-foreground group-hover:text-purple-500 transition-colors">
-                                MCP Server
-                            </span>
-                            <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-purple-500 text-white rounded">
-                                PREVIEW
-                            </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            Use in Claude Desktop, VS Code & Cursor
-                        </p>
-                    </div>
-                </div>
-            </a>
-
             {/* Welcome section */}
             <div className="text-center mb-6">
                 <h2 className="text-lg font-semibold text-foreground mb-2">
-                    Create diagrams with AI
+                    使用 AI 创建图表
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                    Describe what you want to create or upload an image to
-                    replicate
+                    描述您想要创建的内容，或上传图片进行复刻
                 </p>
             </div>
 
             {/* Examples grid */}
             <div className="space-y-3">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-1">
-                    Quick Examples
+                    快速示例
                 </p>
 
                 <div className="grid gap-2">
                     <ExampleCard
                         icon={<FileText className="w-4 h-4 text-primary" />}
-                        title="Paper to Diagram"
-                        description="Upload .pdf, .txt, .md, .json, .csv, .py, .js, .ts and more"
+                        title="文档转图表"
+                        description="支持上传 .pdf, .txt, .md, .json, .csv 等多种格式"
                         onClick={handlePdfExample}
                         isNew
                     />
 
                     <ExampleCard
                         icon={<Zap className="w-4 h-4 text-primary" />}
-                        title="Animated Diagram"
-                        description="Draw a transformer architecture with animated connectors"
+                        title="动态图表"
+                        description="绘制带有动态连接线的 Transformer 架构图"
                         onClick={() => {
                             setInput(
                                 "Give me a **animated connector** diagram of transformer's architecture",
@@ -182,22 +154,22 @@ export default function ExamplePanel({
 
                     <ExampleCard
                         icon={<Cloud className="w-4 h-4 text-primary" />}
-                        title="AWS Architecture"
-                        description="Create a cloud architecture diagram with AWS icons"
+                        title="AWS 架构图"
+                        description="使用 AWS 图标创建云架构图"
                         onClick={handleReplicateArchitecture}
                     />
 
                     <ExampleCard
                         icon={<GitBranch className="w-4 h-4 text-primary" />}
-                        title="Replicate Flowchart"
-                        description="Upload and replicate an existing flowchart"
+                        title="复刻流程图"
+                        description="上传并复刻现有的流程图"
                         onClick={handleReplicateFlowchart}
                     />
 
                     <ExampleCard
                         icon={<Palette className="w-4 h-4 text-primary" />}
-                        title="Creative Drawing"
-                        description="Draw something fun and creative"
+                        title="创意绘图"
+                        description="绘制一些有趣和有创意的内容"
                         onClick={() => {
                             setInput("Draw a cat for me")
                             setFiles([])
@@ -206,7 +178,7 @@ export default function ExamplePanel({
                 </div>
 
                 <p className="text-[11px] text-muted-foreground/60 text-center mt-4">
-                    Examples are cached for instant response
+                    示例已缓存，可即时响应
                 </p>
             </div>
         </div>
