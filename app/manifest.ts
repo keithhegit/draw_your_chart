@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Next AI Draw.io',
-    short_name: 'AIDraw.io',
+    name: 'Draw_Your_Chart',
+    short_name: 'Draw_Your_Chart',
     description: 'Create AWS architecture diagrams, flowcharts, and technical diagrams using AI. Free online tool integrating draw.io with AI assistance for professional diagram creation.',
     start_url: '/',
     display: 'standalone',
@@ -11,13 +11,13 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#171d26',
     icons: [
       {
-        src: '/favicon-192x192.png',
+        src: 'https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png',
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/favicon-512x512.png',
+        src: 'https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
