@@ -20,6 +20,13 @@ import { ChatInput } from "@/components/chat-input"
 import { DebugLogDialog, type LogEntry } from "@/components/debug-log-dialog"
 import { ResetWarningModal } from "@/components/reset-warning-modal"
 import { SettingsDialog } from "@/components/settings-dialog"
+import {
+    STORAGE_ACCESS_CODE_KEY,
+    STORAGE_AI_API_KEY_KEY,
+    STORAGE_AI_BASE_URL_KEY,
+    STORAGE_AI_MODEL_KEY,
+    STORAGE_AI_PROVIDER_KEY,
+} from "@/components/settings-dialog"
 import { useDiagram } from "@/contexts/diagram-context"
 import { getAIConfig } from "@/lib/ai-config"
 import { findCachedResponse } from "@/lib/cached-responses"
@@ -234,6 +241,30 @@ export default function ChatPanel({
     )
     const LOCAL_STORAGE_DEBOUNCE_MS = 1000 // Save at most once per second
 
+    const headers = {
+        "x-access-code":
+            typeof window !== "undefined"
+                ? localStorage.getItem(STORAGE_ACCESS_CODE_KEY) || ""
+                : "",
+        "x-ai-provider":
+            typeof window !== "undefined"
+                ? localStorage.getItem(STORAGE_AI_PROVIDER_KEY) || ""
+                : "",
+        "x-ai-base-url":
+            typeof window !== "undefined"
+                ? localStorage.getItem(STORAGE_AI_BASE_URL_KEY) || ""
+                : "",
+        "x-ai-api-key":
+            typeof window !== "undefined"
+                ? localStorage.getItem(STORAGE_AI_API_KEY_KEY) || ""
+                : "",
+        "x-ai-model":
+            typeof window !== "undefined"
+                ? localStorage.getItem(STORAGE_AI_MODEL_KEY) || ""
+                : "",
+        "x-minimal-style": minimalStyle.toString(),
+    }
+
     const {
         messages,
         sendMessage,
@@ -245,6 +276,7 @@ export default function ChatPanel({
     } = useChat({
         transport: new DefaultChatTransport({
             api: "/api/chat",
+            headers,
         }),
         async onToolCall({ toolCall }) {
             addLog("tool-call", {

@@ -1,7 +1,6 @@
 "use client"
 
 import { FileCode, FileText, Loader2, X } from "lucide-react"
-import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { isPdfFile, isTextFile } from "@/lib/pdf-utils"
 
@@ -102,13 +101,11 @@ export function FilePreviewList({
                                 }
                             >
                                 {file.type.startsWith("image/") && imageUrl ? (
-                                    <Image
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
                                         src={imageUrl}
                                         alt={file.name}
-                                        width={80}
-                                        height={80}
                                         className="object-cover w-full h-full"
-                                        unoptimized
                                     />
                                 ) : isPdfFile(file) || isTextFile(file) ? (
                                     <div className="flex flex-col items-center justify-center h-full p-1">
@@ -170,14 +167,12 @@ export function FilePreviewList({
                         <X className="h-6 w-6" />
                     </button>
                     <div className="relative w-auto h-auto max-w-[90vw] max-h-[90vh]">
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                             src={selectedImage}
-                            alt="Full size preview of uploaded diagram or image"
-                            width={1200}
-                            height={900}
+                            alt="Full size preview"
                             className="object-contain max-w-full max-h-[90vh] w-auto h-auto"
                             onClick={(e) => e.stopPropagation()}
-                            unoptimized
                         />
                     </div>
                 </div>
