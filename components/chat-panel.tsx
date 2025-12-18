@@ -989,16 +989,13 @@ Continue from EXACTLY where you stopped.`,
 
                 // Build user text by concatenating input with pre-extracted text
                 // (Backend only reads first text part, so we must combine them)
-                const parts: any[] = []
+                const imageParts: any[] = []
                 const userText = await processFilesAndAppendContent(
                     input,
                     files,
                     pdfData,
-                    parts,
+                    imageParts,
                 )
-
-                // Add the combined text as the first part
-                parts.unshift({ type: "text", text: userText })
 
                 // Get previous XML from the last snapshot (before this message)
                 const snapshotKeys = Array.from(
@@ -1017,7 +1014,7 @@ Continue from EXACTLY where you stopped.`,
                 // Check all quota limits
                 if (!checkAllQuotaLimits()) return
 
-                sendChatMessage(parts, chartXml, previousXml, sessionId)
+                sendChatMessage(userText, imageParts, chartXml, previousXml, sessionId)
 
                 // Token count is tracked in onFinish with actual server usage
                 setInput("")
@@ -1112,7 +1109,8 @@ Continue from EXACTLY where you stopped.`,
 
     // Send chat message with headers and increment quota
     const sendChatMessage = (
-        parts: any,
+        content: string,
+        parts: any[],
         xml: string,
         previousXml: string,
         sessionId: string,
@@ -1124,7 +1122,11 @@ Continue from EXACTLY where you stopped.`,
         const config = getAIConfig()
 
         sendMessage(
-            { role: "user", content: parts } as any,
+            {
+                role: "user",
+                content,
+                parts: parts.length > 0 ? parts : undefined,
+            } as any,
             {
                 body: { xml, previousXml, sessionId },
                 headers: {

@@ -40,7 +40,9 @@ function validateFileParts(messages: any[]): {
         fileParts = lastMessage.content.filter((p: any) => p.type === "image")
     } else {
         fileParts =
-            lastMessage?.parts?.filter((p: any) => p.type === "file") || []
+            lastMessage?.parts?.filter(
+                (p: any) => p.type === "file" || p.type === "image",
+            ) || []
     }
 
     if (fileParts.length > MAX_FILES) {
@@ -212,18 +214,17 @@ async function handleChatRequest(req: Request): Promise<Response> {
 
     if (isFirstMessage && isEmptyDiagram) {
         const lastMessage = messages[0]
-        let textPart: any
-        let filePart: any
+        let hasFile = false
 
         if (Array.isArray(lastMessage?.content)) {
-            textPart = lastMessage.content.find((p: any) => p.type === "text")
-            filePart = lastMessage.content.find((p: any) => p.type === "image")
+            hasFile = !!lastMessage.content.find((p: any) => p.type === "image")
         } else {
-            textPart = lastMessage.parts?.find((p: any) => p.type === "text")
-            filePart = lastMessage.parts?.find((p: any) => p.type === "file")
+            hasFile = !!lastMessage?.parts?.find(
+                (p: any) => p.type === "file" || p.type === "image",
+            )
         }
 
-        const cached = findCachedResponse(textPart?.text || "", !!filePart)
+        const cached = findCachedResponse(userInputText, hasFile)
 
         if (cached) {
             return createCachedStreamResponse(cached.xml)
