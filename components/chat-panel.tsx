@@ -7,14 +7,12 @@ import {
     MessageSquarePlus,
     PanelRightClose,
     PanelRightOpen,
-    Settings,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import type React from "react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { flushSync } from "react-dom"
-import { FaGithub } from "react-icons/fa"
 import { Toaster, toast } from "sonner"
 import { ButtonWithTooltip } from "@/components/button-with-tooltip"
 import { ChatInput } from "@/components/chat-input"
@@ -1280,8 +1278,8 @@ Continue from EXACTLY where you stopped.`,
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-2">
                             <Image
-                                src="/favicon.ico"
-                                alt="Next AI Drawio"
+                                src="https://pub-c98d5902eedf42f6a9765dfad981fd88.r2.dev/Icon/draw-chart-icon.png"
+                                alt="Draw_Your_Chart"
                                 width={isMobile ? 24 : 28}
                                 height={isMobile ? 24 : 28}
                                 className="rounded"
@@ -1289,7 +1287,7 @@ Continue from EXACTLY where you stopped.`,
                             <h1
                                 className={`${isMobile ? "text-sm" : "text-base"} font-semibold tracking-tight whitespace-nowrap`}
                             >
-                                Next AI Drawio
+                                Draw_Your_Chart
                             </h1>
                         </div>
                         {!isMobile && (
@@ -1328,28 +1326,6 @@ Continue from EXACTLY where you stopped.`,
                             className="hover:bg-accent"
                         >
                             <MessageSquarePlus
-                                className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
-                            />
-                        </ButtonWithTooltip>
-                        <div className="w-px h-5 bg-border mx-1" />
-                        <a
-                            href="https://github.com/DayuanJiang/next-ai-draw-io"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                        >
-                            <FaGithub
-                                className={`${isMobile ? "w-4 h-4" : "w-5 h-5"}`}
-                            />
-                        </a>
-                        <ButtonWithTooltip
-                            tooltipContent="Settings"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setShowSettingsDialog(true)}
-                            className="hover:bg-accent"
-                        >
-                            <Settings
                                 className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
                             />
                         </ButtonWithTooltip>
